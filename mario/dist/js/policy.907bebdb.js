@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["policy"],{"2da4":function(c,e,n){"use strict";n.r(e);var o=n("7a23"),t={class:"policy"},a=Object(o["createVNode"])("h1",null,"MIEJSCE NA POLITYKE PRYWATNOSCI",-1);function r(c,e){return Object(o["openBlock"])(),Object(o["createBlock"])("main",t,[a])}const i={};i.render=r;e["default"]=i}}]);
+//# sourceMappingURL=policy.907bebdb.js.map
