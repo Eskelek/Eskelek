@@ -1,8 +1,8 @@
 <template>
   <div class="introduction">
     <div class="siteWrap">
-      <h1 class="introduction__heading">{{ head }}</h1>
-      <p class="introduction__subheading">{{ subhead }}</p>
+      <h1 v-if="head && head !=='0'" class="introduction__heading">{{ head }}</h1>
+      <p v-if="subhead && subhead !=='0'" class="introduction__subheading">{{ subhead }}</p>
     </div>
   </div>
 </template>
@@ -18,16 +18,28 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.introduction {
+  text-align: center;
+  padding: 1rem 12px 1rem;
+  &__heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  &__subheading {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+  }
+}
+@media screen and (max-width: 768px) {
   .introduction {
-    text-align: center;
-    padding: 1rem 0 3rem;
     &__heading {
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-size: 1.2rem;
     }
     &__subheading {
-      font-size: 1.2rem;
-      font-weight: 400;
+      font-size: 14px;
     }
   }
+}
 </style>

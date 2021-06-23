@@ -11,7 +11,6 @@ const getGames = () => {
       games.value = res.docs.map((doc) => {
         return { ...doc.data(), id: doc.id }
       })
-      console.log(res.docs[0].data())
     } catch (err) {
       errorGames.value = err.value.message
       console.log(errorGames.value)

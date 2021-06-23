@@ -2,45 +2,72 @@
   <header class="header">
     <BaseNav :firebaseTexts="mainPage[0] ? mainPage[0] : ''"/>
   </header>
-  <router-view :firebaseTexts="mainPage[0] ? mainPage[0] : ''"/>
-  <ShortPolicy v-if="!acceptCookie" :policyText="mainPage[0] ? mainPage[0].short_policy : ''"/>
-  <FooterBase :firebaseTexts="mainPage[0] ? mainPage[0] : ''"/>
+  <router-view v-if="mainPage[0]" :firebaseTexts="mainPage[0] ? mainPage[0] : ''" :policy="policy[0] ? policy[0] : ''"/>
+  <ShortPolicy v-if="!acceptCookie && policy[0]" :policyText="policy[0].short_policy ? policy[0].short_policy : ''"/>
+  <FooterBase v-if="mainPage[0]" :firebaseTexts="mainPage[0]" :policy="policy[0] ? policy[0] : ''"/>
 </template>
 
 <script>
 import getMainPage from './composables/getMainPage'
-import { defineAsyncComponent, computed } from 'vue'
+import getPolicy from './composables/getPolicy'
+import { defineAsyncComponent, computed, watch } from 'vue'
 import { useStore } from 'vuex'
-import BaseNav from './components/BaseNav.vue'
-import FooterBase from './components/FooterBase.vue'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'App',
   components: {
-    BaseNav,
-    FooterBase,
+    BaseNav: defineAsyncComponent(() =>
+      import('./components/BaseNav.vue')
+    ),
+    FooterBase: defineAsyncComponent(() =>
+      import('./components/FooterBase.vue')
+    ),
     ShortPolicy: defineAsyncComponent(() =>
       import('./components/ShortPolicy.vue')
     )
   },
   setup () {
     const { mainPage, errorMainPage, loadMainPage } = getMainPage()
+    const { policy, errorPolicy, loadPolicy } = getPolicy()
     const store = useStore()
+    const route = useRoute()
 
     const acceptCookie = computed(() => {
       return store.getters.getCookieStatus
     })
 
-    loadMainPage()
+    watch(route, (currentValue, oldValue) => {
+      if (window.location.hash) {
+        const scrollInterv = setInterval(() => {
+          const el = document.getElementById(window.location.hash.replace('#', ''))
+          if (el) {
+            clearInterval(scrollInterv)
+            setTimeout(() => {
+              el.scrollIntoView()
+            }, 500)
+          }
+        }, 50)
+      }
+    })
 
-    return { mainPage, errorMainPage, acceptCookie }
+    loadMainPage()
+    loadPolicy()
+
+    return { mainPage, errorMainPage, policy, errorPolicy, acceptCookie }
   }
 }
 </script>
 
 <style lang="scss">
 html {
-  font-size: 16px;
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 12px;
+  }
 }
 body {
   background: #854c2f;
@@ -51,12 +78,20 @@ body {
   margin: 0;
   padding: 0;
 }
+#app {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  main {
+    flex: 1;
+  }
+}
 .siteWrap {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
 }
-#app {
-  overflow-y: scroll;
+ul {
+  list-style-type: none;
 }
 //////////////////////////////////////////
 /* to get pixelated images (nearest-neighbor filter) on all  browsers */
@@ -256,8 +291,8 @@ body {
   height: 100%;
   left: 0px;
   top: 0px;
-  position: fixed;
-  overflow: hidden;
+  // position: fixed;
+  // overflow: hidden;
   font-size: 0.8rem; }
 
 /* general rules to apply on anything inside the content */
@@ -491,11 +526,11 @@ ul.rpgui-dropdown-imp {
 
 /* dropdown options hover */
 .rpgui-dropdown-imp li:hover {
-  color: yellow; }
+  color: #d27d2c; }
 
 /* dropdown hover */
 .rpgui-dropdown-imp:hover {
-  color: yellow; }
+  color: #d27d2c; }
 
 /**
 * hr styling
@@ -518,62 +553,7 @@ ul.rpgui-dropdown-imp {
 /**
 * Icon styles.
 */
-.rpgui-icon {
-  display: inline-block;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  width: 64px;
-  height: 64px; }
 
-.rpgui-icon.sword {
-  background-image: url("./assets/img/icons/sword.png"); }
-
-.rpgui-icon.shield {
-  background-image: url("./assets/img/icons/shield.png"); }
-
-.rpgui-icon.exclamation {
-  background-image: url("./assets/img/icons/exclamation.png"); }
-
-.rpgui-icon.potion-red {
-  background-image: url("./assets/img/icons/potion-red.png"); }
-
-.rpgui-icon.potion-green {
-  background-image: url("./assets/img/icons/potion-green.png"); }
-
-.rpgui-icon.potion-blue {
-  background-image: url("./assets/img/icons/potion-blue.png"); }
-
-.rpgui-icon.weapon-slot {
-  background-image: url("./assets/img/icons/weapon-slot.png"); }
-
-.rpgui-icon.shield-slot {
-  background-image: url("./assets/img/icons/shield-slot.png"); }
-
-.rpgui-icon.armor-slot {
-  background-image: url("./assets/img/icons/armor-slot.png"); }
-
-.rpgui-icon.helmet-slot {
-  background-image: url("./assets/img/icons/helmet-slot.png"); }
-
-.rpgui-icon.ring-slot {
-  background-image: url("./assets/img/icons/ring-slot.png"); }
-
-.rpgui-icon.potion-slot {
-  background-image: url("./assets/img/icons/potion-slot.png"); }
-
-.rpgui-icon.magic-slot {
-  background-image: url("./assets/img/icons/magic-slot.png"); }
-
-.rpgui-icon.shoes-slot {
-  background-image: url("./assets/img/icons/shoes-slot.png"); }
-
-.rpgui-icon.empty-slot {
-  background-image: url("./assets/img/icons/empty-slot.png"); }
-
-/**
-* input styling
-*/
-/* input/textarea input */
 .rpgui-content input,
 .rpgui-content textarea {
   /* set size and colors */
@@ -666,11 +646,11 @@ ul.rpgui-list-imp {
 
 /* list options hover */
 .rpgui-list-imp li:hover {
-  color: yellow; }
+  color: #d27d2c; }
 
 /* list hover */
 .rpgui-list-imp:hover {
-  color: yellow; }
+  color: #d27d2c; }
 
 .rpgui-list-imp .rpgui-selected {
   background: rgba(0, 0, 0, 0.3); }
@@ -736,7 +716,7 @@ ul.rpgui-list-imp {
   color: white;
   text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
   font-size: 1.0rem;
-  line-height: 1.2; }
+  line-height: 1.4; }
 
 /* default span */
 .rpgui-content span {
@@ -744,15 +724,15 @@ ul.rpgui-list-imp {
   color: white;
   text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
   font-size: 1.0rem;
-  line-height: 1.2; }
+  line-height: 1.4; }
 
 /* default gui link */
 .rpgui-content a {
   /* color and border */
-  color: yellow;
+  color: #d27d2c;
   text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
   font-size: 1.0rem;
-  line-height: 1.2;
+  line-height: 1.4;
   text-decoration: none; }
 
 /* default gui link */
@@ -765,7 +745,7 @@ ul.rpgui-list-imp {
   color: white;
   text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
   font-size: 1.0rem;
-  line-height: 1.2;
+  line-height: 1.4;
   display: inline; }
 
 /* default gui label */
@@ -775,7 +755,7 @@ ul.rpgui-list-imp {
   color: white;
   text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
   font-size: 1.0rem;
-  line-height: 1.2; }
+  line-height: 1.4; }
 
 /*
 * progress bar styling
@@ -877,30 +857,30 @@ ul.rpgui-list-imp {
 * Rules for misc and general things.
 */
 /* set scrollbars for webkit browsers (like chrome) */
-.rpgui-content ::-webkit-scrollbar,
-.rpgui-content::-webkit-scrollbar {
-  width: 18px; }
+// .rpgui-content ::-webkit-scrollbar,
+// .rpgui-content::-webkit-scrollbar {
+//   width: 18px; }
 
 /* Track */
-.rpgui-content ::-webkit-scrollbar-track,
-.rpgui-content::-webkit-scrollbar-track {
-  background-image: url("./assets/img/scrollbar-track.png");
-  background-size: 18px 60px;
-  background-repeat: repeat-y; }
+// .rpgui-content ::-webkit-scrollbar-track,
+// .rpgui-content::-webkit-scrollbar-track {
+//   // background-image: url("./assets/img/scrollbar-track.png");
+//   background-size: 18px 60px;
+//   background-repeat: repeat-y; }
 
 /* Handle */
-.rpgui-content ::-webkit-scrollbar-thumb,
-.rpgui-content::-webkit-scrollbar-thumb {
-  background-image: url("./assets/img/scrollbar-thumb.png");
-  background-size: 100% 100%;
-  background-repeat: no-repeat; }
+// .rpgui-content ::-webkit-scrollbar-thumb,
+// .rpgui-content::-webkit-scrollbar-thumb {
+//   // background-image: url("./assets/img/scrollbar-thumb.png");
+//   background-size: 100% 100%;
+//   background-repeat: no-repeat; }
 
 /* buttons */
-.rpgui-content ::-webkit-scrollbar-button,
-.rpgui-content::-webkit-scrollbar-button {
-  background-image: url("./assets/img/scrollbar-button.png");
-  background-size: 100% 100%;
-  background-repeat: no-repeat; }
+// .rpgui-content ::-webkit-scrollbar-button,
+// .rpgui-content::-webkit-scrollbar-button {
+//   // background-image: url("./assets/img/scrollbar-button.png");
+//   background-size: 100% 100%;
+//   background-repeat: no-repeat; }
 
 /**
 * for disabled elements

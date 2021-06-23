@@ -2,7 +2,6 @@
     <YouTube
       class="yt"
         :src="yLink"
-        @ready="onReady"
         ref="youtube" />
 </template>
 
@@ -14,18 +13,12 @@ export default defineComponent({
   props: {
     yLink: String
   },
-  components: { YouTube },
-  methods: {
-    // onReady () {
-    //   this.$refs.youtube.playVideo()
-    // }
-  }
+  components: { YouTube }
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .yt {
     width: 100% !important;
-    height: 100% !important;
   }
 </style>

@@ -11,7 +11,6 @@ const getMainPage = () => {
       mainPage.value = res.docs.map((doc) => {
         return { ...doc.data(), id: doc.id }
       })
-      console.log(res.docs[0].data())
     } catch (err) {
       errorMainPage.value = err.value.message
       console.log(errorMainPage.value)

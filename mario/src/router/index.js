@@ -1,22 +1,37 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import store from '../store'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+    meta: { requiresAuth: true }
   },
   {
-    path: '/polityka-prywatnosci',
+    path: '/privacy-policy',
     name: 'Policy',
-    component: () => import(/* webpackChunkName: "policy" */ '../views/Policy.vue')
+    component: () => import(/* webpackChunkName: "policy" */ '../views/Policy.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/coming-soon',
+    name: 'welcome',
+    component: () => import(/* webpackChunkName: "welcome" */ '../views/Welcome.vue')
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !store.getters.getTndkrStatus) {
+    next({ name: 'welcome' })
+  } else {
+    next()
+  }
 })
 
 export default router
