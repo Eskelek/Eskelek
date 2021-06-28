@@ -4,7 +4,7 @@
       <div class="navigation__row">
         <div class="navigation__logo">
           <router-link to="/">
-            <img alt="Tendoko" title="Tendoko" src="../assets/img/tendokore/tendokoreLogo50.png">
+            <img loading="lazy" alt="Tendoko" title="Tendoko" src="../assets/img/tendokore/tendokoreLogo50.png">
           </router-link>
         </div>
         <div class="navigation__media" v-if="firebaseTexts">

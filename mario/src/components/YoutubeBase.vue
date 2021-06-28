@@ -2,7 +2,8 @@
     <YouTube
       class="yt"
         :src="yLink"
-        ref="youtube" />
+        :ref="`youtube${privKey}`"
+        :key="`privKey${privKey}`"/>
 </template>
 
 <script>
@@ -11,7 +12,8 @@ import YouTube from 'vue3-youtube'
 
 export default defineComponent({
   props: {
-    yLink: String
+    yLink: String,
+    privKey: String
   },
   components: { YouTube }
 })

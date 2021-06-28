@@ -11,7 +11,7 @@
       <div class="footer__more">
         <div class="logo">
           <router-link to="/">
-            <img alt="Tendoko" title="Tendoko" src="../assets/img/tendokore/tendokoreLogo50.png">
+            <img loading="lazy" alt="Tendoko" title="Tendoko" src="../assets/img/tendokore/tendokoreLogo50.png">
           </router-link>
         </div>
         <ul v-if="firebaseTexts.footer_rules" class="rules">
