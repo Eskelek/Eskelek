@@ -63,6 +63,13 @@ export default {
 html {
   font-size: 14px;
   scroll-behavior: smooth;
+  #mc-embedded-subscribe-form {
+    .embeddedForm {
+      background: #333;
+      position: fixed;
+      top: -100%;
+    }
+  }
 }
 @media screen and (max-width: 768px) {
   html {

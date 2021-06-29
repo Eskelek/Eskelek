@@ -17,7 +17,7 @@
           <swiper-slide v-for="(slide, ind) in game.slides" :key="`${gameIndex}slide-coming${ind}`">
             <img loading="lazy" v-if="slide.file_image" :src="slide.file_image" alt="Sorry - broken photo" title="Tendokore game photos">
             <img loading="lazy" v-else-if="slide.external_image" :src="slide.external_image" alt="Sorry - broken photo" title="Tendokore game photos">
-            <YoutubeBase v-else-if="slide.youtube_link" :yLink="slide.youtube_link" :key="`${gameIndex}ytbox${ind}`"/>
+            <YoutubeBase v-else-if="slide.youtube_link" :yLink="slide.youtube_link" :privKey="`c${gameIndex}ytb${ind}`" :key="`com${gameIndex}ytbox${ind}`"/>
             <div v-if="slide.show_slide_description" class="game__slide-info">
               <h3 v-if="slide.title && slide.title !== '0'" class="game__slide-title">
                 {{ slide.title }}
@@ -73,7 +73,7 @@
           <swiper-slide v-for="(slide, ind) in game.slides" :key="`${gameIndex}slide-release${ind}`" :class="{ withText : slide.show_slide_description}">
             <img loading="lazy" v-if="slide.file_image" :src="slide.file_image" alt="Sorry - broken photo" title="Tendokore game photos">
             <img loading="lazy" v-else-if="slide.external_image" :src="slide.external_image" alt="Sorry - broken photo" title="Tendokore game photos">
-            <YoutubeBase v-else-if="slide.youtube_link" :yLink="slide.youtube_link" :key="`rel-${gameIndex}ytbox${ind}`"/>
+            <YoutubeBase v-else-if="slide.youtube_link" :yLink="slide.youtube_link" :privKey="`r${gameIndex}ytb${ind}`" :key="`rel-${gameIndex}ytbox${ind}`"/>
             <div v-if="slide.show_slide_description" class="game__slide-info">
               <h3 v-if="slide.title && slide.title !== '0'" class="game__slide-title">
                 {{ slide.title }}

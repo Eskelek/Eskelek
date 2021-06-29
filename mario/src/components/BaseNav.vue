@@ -4,7 +4,7 @@
       <div class="navigation__row">
         <div class="navigation__logo">
           <router-link to="/">
-            <img loading="lazy" alt="Tendoko" title="Tendoko" src="../assets/img/tendokore/tendokoreLogo50.png">
+            <img loading="lazy" alt="Tendokore" title="Tendokore" src="../assets/img/tendokore/tendokoreLogo50.png">
           </router-link>
         </div>
         <div class="navigation__media" v-if="firebaseTexts">
@@ -13,10 +13,8 @@
           <a v-if="firebaseTexts.twitter && firebaseTexts.twitter !== '0'" rel="noopener noreferrer" target="_blank" :href="firebaseTexts.twitter" class="media__anchor--Twitter"><font-awesome-icon :icon="iconTwitter" /></a>
           <a v-if="firebaseTexts.discord && firebaseTexts.discord !== '0'" rel="noopener noreferrer" target="_blank" :href="firebaseTexts.discord" class="media__anchor--discord"><font-awesome-icon :icon="iconDiscord" /></a>
         </div>
-        <!-- <div class="navigation__newsletter">
-          <input type="email" placeholder="Join Our Newsletter">
-          <button>JOIN</button>
-        </div> -->
+        <div class="navigation__newsletter">
+        </div>
       </div>
     </div>
     <ul class="navigation__menu siteWrap" v-if="firebaseTexts && firebaseTexts.menu">
@@ -41,6 +39,7 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { onMounted } from 'vue'
 export default {
   name: 'BaseNav',
   props: {
@@ -50,6 +49,11 @@ export default {
     FontAwesomeIcon
   },
   setup () {
+    onMounted(() => {
+      const newsletter = document.getElementById('mc-embedded-subscribe-form')
+      const newsletterArea = document.querySelector('.navigation__newsletter')
+      newsletterArea.appendChild(newsletter)
+    })
     const iconMail = faEnvelope
     const iconFacebook = faFacebook
     const iconDiscord = faDiscord
@@ -61,7 +65,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "src/assets/styles/variables.scss";
 .navigation {
   padding: 0 12px;
@@ -111,6 +115,20 @@ export default {
   }
   &__newsletter {
     display: inline-flex;
+    max-width: 250px;
+    .rpgui-content label {
+      display: none;
+    }
+    #mc-embedded-subscribe {
+      font-size: 10px;
+      padding: 0 2px 0 4px;
+    }
+    #mc_embed_signup_scroll {
+      max-width: 250px;
+      label {
+        display: none !important;
+      }
+    }
   }
 }
 @media screen and (max-width: 768px) {
@@ -141,6 +159,17 @@ export default {
         line-height: 24px;
         font-size: 10px;
       }
+    }
+  }
+}
+@media screen and (max-width: 420px) {
+  .navigation__newsletter {
+    max-width: 100%;
+    form {
+      width: 100%;
+    }
+    #mc_embed_signup_scroll {
+      max-width: 100%;
     }
   }
 }
