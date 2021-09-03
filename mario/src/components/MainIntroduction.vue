@@ -25,6 +25,7 @@ export default {
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
+    margin: 7px;
   }
   &__subheading {
     font-size: 1.2rem;

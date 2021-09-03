@@ -5,14 +5,14 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
-    meta: { requiresAuth: true }
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+    // meta: { requiresAuth: true }
   },
   {
     path: '/privacy-policy',
     name: 'Policy',
-    component: () => import(/* webpackChunkName: "policy" */ '../views/Policy.vue'),
-    meta: { requiresAuth: true }
+    component: () => import(/* webpackChunkName: "policy" */ '../views/Policy.vue')
+    // meta: { requiresAuth: true }
   },
   {
     path: '/coming-soon',

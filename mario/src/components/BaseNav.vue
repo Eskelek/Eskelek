@@ -4,7 +4,7 @@
       <div class="navigation__row">
         <div class="navigation__logo">
           <router-link to="/">
-            <img loading="lazy" alt="Tendokore" title="Tendokore" src="../assets/img/tendokore/tendokoreLogo50.png">
+            <img loading="lazy" alt="Tendokore" title="Tendokore. Retrograding the Present. Retro indie publisher" src="../assets/img/tendokore/tendokoreLogo50.png">
           </router-link>
         </div>
         <div class="navigation__media" v-if="firebaseTexts">
@@ -96,7 +96,7 @@ export default {
   &__logo {
     height: 45px;
     width: 130px;
-    margin-right: 20px;
+    margin: 0 auto 0 0;
     img {
       image-rendering: initial;
       height: 100%;
@@ -115,18 +115,38 @@ export default {
   }
   &__newsletter {
     display: inline-flex;
-    max-width: 250px;
+    max-width: 300px;
     .rpgui-content label {
       display: none;
     }
     #mc-embedded-subscribe {
-      font-size: 10px;
+      font-size: 8px;
       padding: 0 2px 0 4px;
+      cursor: url('/img/point.8d954a35.png') 10 0, auto;
     }
     #mc_embed_signup_scroll {
-      max-width: 250px;
+      display: flex;
+      max-width: 300px;
       label {
         display: none !important;
+      }
+      .clear, #mce-EMAIL {
+        display: inline-block;
+        font-size: 12px;
+        color: #fff;
+        border: 1px solid #4e4a4e;
+        &::placeholder {
+          color: #fff;
+        }
+      }
+      input:-webkit-autofill{
+        -webkit-text-fill-color: #fff !important;
+      }
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+          transition: background-color 5000s ease-in-out 0s;
       }
     }
   }
@@ -162,7 +182,13 @@ export default {
     }
   }
 }
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 440px) {
+  .navigation__row {
+    justify-content: center;
+  }
+  .navigation__flex {
+    justify-content: center;
+  }
   .navigation__newsletter {
     max-width: 100%;
     form {

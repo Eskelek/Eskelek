@@ -25,7 +25,6 @@ export default ({
         }, 100)
       } else {
         onYouTubePlayer()
-        console.log('else')
       }
     }
 
