@@ -41,7 +41,7 @@ export default {
   background: $dark;
   &__description {
     margin-bottom: 1rem;
-    text-align: justify;
+    text-align: center;
   }
   &__links {
     display: flex;

@@ -1,6 +1,9 @@
 <template>
-  <MainIntroduction :head="firebaseTexts ? firebaseTexts.main_title : ''" :subhead="firebaseTexts ? firebaseTexts.main_description : ''"/>
+  <div>
+  <PopupWindow v-if="isPopupTimeRight" :popupObj="popUpInformations" />
+  <CustomBack v-if="customBackgroundImage && isCustomBackTimeRight" :backImage="customBackgroundImage" :backFull="customBackgroundFull" :backLink="customBackgroundLink" />
   <main class="home">
+    <MainIntroduction :head="firebaseTexts ? firebaseTexts.main_title : ''" :subhead="firebaseTexts ? firebaseTexts.main_description : ''"/>
     <div class="games-kind" v-if="comingSoonGames.length">
       <p class="games-kind__heading siteWrap">Coming Soon</p>
       <div class="game siteWrap rpgui-container framed" v-for="(game, gameIndex) in comingSoonGames" :key="`slider-coming${gameIndex}`">
@@ -12,11 +15,12 @@
           :slides-per-view="1"
           :space-between="0"
           navigation
+          @slideChange="onSlideChange"
           :pagination="{ clickable: true }"
         >
           <swiper-slide v-for="(slide, ind) in game.slides" :key="`${gameIndex}slide-coming${ind}`">
             <img loading="lazy" v-if="slide.file_image" :src="slide.file_image" alt="Sorry - broken photo" title="Tendokore game photos">
-            <img loading="lazy" v-else-if="slide.external_image" :src="slide.external_image" alt="Sorry - broken photo" title="Tendokore game photos">
+            <img loading="lazy" v-else-if="slide.external_image" :class="ind != 0 ? 'lazyimg' : ''" :src="ind == 0 ? slide.external_image : ''" :data-src="slide.external_image" alt="Sorry - broken photo" title="Tendokore game photos">
             <YoutubeBase v-else-if="slide.youtube_link" :yLink="slide.youtube_link" :privKey="`c${gameIndex}ytb${ind}`" :key="`com${gameIndex}ytbox${ind}`"/>
             <div v-if="slide.show_slide_description" class="game__slide-info">
               <h3 v-if="slide.title && slide.title !== '0'" class="game__slide-title">
@@ -30,7 +34,7 @@
           ...
         </swiper>
         <div class="game__info">
-          <div class="maker" v-if="game.maker.maker_name && game.maker.maker_name !== '0'">
+          <div class="maker" v-if="game.maker && game.maker.maker_name && game.maker.maker_name !== '0'">
             <p class="maker__by">Developed by:</p>
             <a rel="noopener noreferrer" target="_blank" class="maker__link" :href="game.maker.maker_link ? game.maker.maker_link : ''">{{game.maker.maker_name}}</a>
           </div>
@@ -67,12 +71,13 @@
         <swiper
           :slides-per-view="1"
           :space-between="0"
+          @slideChange="onSlideChange"
           navigation
           :pagination="{ clickable: true }"
         >
           <swiper-slide v-for="(slide, ind) in game.slides" :key="`${gameIndex}slide-release${ind}`" :class="{ withText : slide.show_slide_description}">
             <img loading="lazy" v-if="slide.file_image" :src="slide.file_image" alt="Sorry - broken photo" title="Tendokore game photos">
-            <img loading="lazy" v-else-if="slide.external_image" :src="slide.external_image" alt="Sorry - broken photo" title="Tendokore game photos">
+            <img loading="lazy" v-else-if="slide.external_image" :class="ind != 0 ? 'lazyimg' : ''" :src="ind == 0 ? slide.external_image : ''" :data-src="slide.external_image" alt="Sorry - broken photo" title="Tendokore game photos">
             <YoutubeBase v-else-if="slide.youtube_link" :yLink="slide.youtube_link" :privKey="`r${gameIndex}ytb${ind}`" :key="`rel-${gameIndex}ytbox${ind}`"/>
             <div v-if="slide.show_slide_description" class="game__slide-info">
               <h3 v-if="slide.title && slide.title !== '0'" class="game__slide-title">
@@ -86,7 +91,7 @@
           ...
         </swiper>
         <div class="game__info">
-          <div class="maker" v-if="game.maker.maker_name && game.maker.maker_name !== '0'">
+          <div class="maker" v-if="game.maker && game.maker.maker_name && game.maker.maker_name !== '0'">
             <p class="maker__by">Developed by:</p>
             <a rel="noopener noreferrer" target="_blank" class="maker__link" :href="game.maker.maker_link ? game.maker.maker_link : ''">{{game.maker.maker_name}}</a>
           </div>
@@ -114,6 +119,7 @@
       </div>
     </div>
   </main>
+  </div>
 </template>
 
 <script>
@@ -125,6 +131,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { faSteam, faPlaystation, faXbox } from '@fortawesome/free-brands-svg-icons'
 
 // composable
+import { useStore } from 'vuex'
 import getGames from '../composables/getGames'
 
 // Import Swiper styles
@@ -151,13 +158,42 @@ export default {
     MainIntroduction: defineAsyncComponent(() =>
       import('../components/MainIntroduction.vue')
     ),
+    PopupWindow: defineAsyncComponent(() =>
+      import('../components/PopupWindow.vue')
+    ),
+    CustomBack: defineAsyncComponent(() =>
+      import('../components/CustomBack.vue')
+    ),
     Swiper,
     SwiperSlide
   },
-  setup () {
+  setup (props) {
     const { games, errorGames, loadGames } = getGames()
     loadGames()
     const gamesFilt = ref(games)
+
+    const store = useStore()
+
+    const onSlideChange = () => {
+      const lazyImages = document.getElementsByClassName('lazyimg')
+      for (const limg of lazyImages) {
+        limg.src = limg.dataset.src
+      }
+    }
+
+    const popUpInformations = computed(() => {
+      if (props.firebaseTexts && props.firebaseTexts.popup) {
+        return props.firebaseTexts.popup
+      }
+      return ''
+    })
+
+    const customBackground = computed(() => {
+      if (props.firebaseTexts && props.firebaseTexts.customBackground) {
+        return props.firebaseTexts.customBackground
+      }
+      return ''
+    })
 
     const sortByOrder = (a, b) => {
       return a.order - b.order
@@ -167,19 +203,52 @@ export default {
       const cGames = gamesFilt.value.filter((game) => {
         return game.released === false
       })
-      return cGames.sort(sortByOrder)
+      if (cGames.length > 0) {
+        store.dispatch('setComingSoonGames', cGames.sort(sortByOrder))
+        return cGames.sort(sortByOrder)
+      } else {
+        return store.getters.getComingSoonGames
+      }
     })
     const releasedGames = computed(() => {
       const rGames = gamesFilt.value.filter((game) => {
         return game.released === true
       })
-      return rGames.sort(sortByOrder)
+      if (rGames.length > 0) {
+        store.dispatch('setReleasedGames', rGames.sort(sortByOrder))
+        return rGames.sort(sortByOrder)
+      } else {
+        return store.getters.getReleasedGames
+      }
     })
     const iconPS = faPlaystation
     const iconSteam = faSteam
     const iconXbox = faXbox
+    const today = new Date()
+    const plTime = today.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Europe/Warsaw' }).replace(',', '').replaceAll('/', '-')
+    const isPopupTimeRight = computed(() => {
+      if (popUpInformations.value.dateStart === '0' || popUpInformations.value.dateEnd === '0') {
+        return false
+      }
+      return popUpInformations.value.dateStart < plTime && popUpInformations.value.dateEnd > plTime
+    })
+    const customBackgroundImage = computed(() => {
+      return (customBackground.value.fullImage && customBackground.value.fullImage !== '0') ? customBackground.value.fullImage : ((customBackground.value.pattern && customBackground.value.pattern !== '0') ? customBackground.value.pattern : false)
+    })
+    const customBackgroundFull = computed(() => {
+      return (customBackground.value.fullImage && customBackground.value.fullImage !== '0') || false
+    })
+    const customBackgroundLink = computed(() => {
+      return (customBackground.value.link && customBackground.value.link !== '0') || false
+    })
+    const isCustomBackTimeRight = computed(() => {
+      if (customBackground.value.dateStart === '0' || customBackground.value.dateEnd === '0') {
+        return false
+      }
+      return customBackground.value.dateStart < plTime && customBackground.value.dateEnd > plTime
+    })
 
-    return { releasedGames, comingSoonGames, errorGames, iconSteam, iconPS, iconXbox }
+    return { onSlideChange, releasedGames, comingSoonGames, errorGames, iconSteam, iconPS, iconXbox, isPopupTimeRight, popUpInformations, customBackgroundImage, customBackgroundFull, customBackgroundLink, isCustomBackTimeRight }
   }
 }
 
@@ -224,6 +293,11 @@ export default {
 @import "src/assets/styles/variables.scss";
 .home {
   padding: 0 8px;
+  margin: 0 auto;
+  background: #854c2f;
+  max-width: 900px;
+  width: 100%;
+  z-index: 0;
 }
 .games-kind {
   padding-bottom: 2rem;

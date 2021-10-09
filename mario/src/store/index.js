@@ -3,7 +3,9 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     cookie: false,
-    tndkr: false
+    tndkr: false,
+    releasedGames: [],
+    comingSoonGames: []
   },
   mutations: {
     SET_COOKIE_STATUS (state, payload) {
@@ -12,6 +14,14 @@ export default createStore({
     },
     SET_TNDKR_STATUS (state, payload) {
       state.tndkr = payload
+    },
+    SET_RELEASED_GAMES (state, payload) {
+      localStorage.setItem('relGames', true)
+      state.releasedGames = payload
+    },
+    SET_COMING_SOON_GAMES (state, payload) {
+      localStorage.setItem('csGames', true)
+      state.comingSoonGames = payload
     }
   },
   actions: {
@@ -20,6 +30,12 @@ export default createStore({
     },
     setTndkrStatus ({ commit }, payload) {
       commit('SET_TNDKR_STATUS', payload)
+    },
+    setReleasedGames ({ commit }, payload) {
+      commit('SET_RELEASED_GAMES', payload)
+    },
+    setComingSoonGames ({ commit }, payload) {
+      commit('SET_COMING_SOON_GAMES', payload)
     }
   },
   modules: {
@@ -31,6 +47,20 @@ export default createStore({
         return true
       }
       return state.cookie
+    },
+    getReleasedGames: (state) => {
+      const isGames = localStorage.getItem('relGames')
+      if (isGames) {
+        return isGames
+      }
+      return state.releasedGames
+    },
+    getComingSoonGames: (state) => {
+      const isGames = localStorage.getItem('csGames')
+      if (isGames) {
+        return isGames
+      }
+      return state.comingSoonGames
     },
     getTndkrStatus: (state) => {
       return state.tndkr

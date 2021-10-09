@@ -11,6 +11,8 @@
           <a v-if="firebaseTexts.mail && firebaseTexts.mail !== '0'" :href="`mailto: ${firebaseTexts.mail}`" class="media__anchor--mail"><font-awesome-icon :icon="iconMail" /></a>
           <a v-if="firebaseTexts.facebook && firebaseTexts.facebook !== '0'" rel="noopener noreferrer" target="_blank" :href="firebaseTexts.facebook" class="media__anchor--Facebook"><font-awesome-icon :icon="iconFacebook" /></a>
           <a v-if="firebaseTexts.twitter && firebaseTexts.twitter !== '0'" rel="noopener noreferrer" target="_blank" :href="firebaseTexts.twitter" class="media__anchor--Twitter"><font-awesome-icon :icon="iconTwitter" /></a>
+          <a v-if="firebaseTexts.steam && firebaseTexts.steam !== '0'" rel="noopener noreferrer" target="_blank" :href="firebaseTexts.steam" class="media__anchor--Steam"><font-awesome-icon :icon="iconSteam" /></a>
+          <a v-if="firebaseTexts.forum && firebaseTexts.forum !== '0'" rel="noopener noreferrer" target="_blank" :href="firebaseTexts.forum" class="media__anchor--Forum"><font-awesome-icon :icon="iconUsers" /></a>
           <a v-if="firebaseTexts.discord && firebaseTexts.discord !== '0'" rel="noopener noreferrer" target="_blank" :href="firebaseTexts.discord" class="media__anchor--discord"><font-awesome-icon :icon="iconDiscord" /></a>
         </div>
         <div class="navigation__newsletter">
@@ -37,8 +39,8 @@
 
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faFacebook, faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faEnvelope, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faFacebook, faTwitter, faSteam, faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { onMounted } from 'vue'
 export default {
   name: 'BaseNav',
@@ -54,13 +56,15 @@ export default {
       const newsletterArea = document.querySelector('.navigation__newsletter')
       newsletterArea.appendChild(newsletter)
     })
+    const iconDiscord = faDiscord
     const iconMail = faEnvelope
     const iconFacebook = faFacebook
-    const iconDiscord = faDiscord
+    const iconUsers = faUsers
     const iconTwitter = faTwitter
+    const iconSteam = faSteam
     const internalLinkValues = ['http', 'https', 'www']
 
-    return { iconMail, iconFacebook, iconDiscord, iconTwitter, internalLinkValues }
+    return { iconMail, iconFacebook, iconUsers, iconTwitter, iconSteam, iconDiscord, internalLinkValues }
   }
 }
 </script>

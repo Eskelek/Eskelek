@@ -15,9 +15,26 @@ const routes = [
     // meta: { requiresAuth: true }
   },
   {
-    path: '/coming-soon',
-    name: 'welcome',
-    component: () => import(/* webpackChunkName: "welcome" */ '../views/Welcome.vue')
+    path: '/links',
+    name: 'links',
+    component: () => import(/* webpackChunkName: "policy" */ '../views/Links.vue')
+    // meta: { requiresAuth: true }
+  },
+  // {
+  //   path: '/promo',
+  //   name: 'promo',
+  //   component: () => import(/* webpackChunkName: "policy" */ '../views/External.vue')
+  //   // meta: { requiresAuth: true }
+  // }
+  // {
+  //   path: '/coming-soon',
+  //   name: 'welcome',
+  //   component: () => import(/* webpackChunkName: "welcome" */ '../views/Welcome.vue')
+  // }
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'Errorpage',
+    component: () => import(/* webpackChunkName: "errorpage" */ '../views/Errorpage.vue')
   }
 ]
 

@@ -2,7 +2,11 @@
   <header class="header">
     <BaseNav :firebaseTexts="mainPage[0] ? mainPage[0] : ''"/>
   </header>
-  <router-view v-if="mainPage[0]" :firebaseTexts="mainPage[0] ? mainPage[0] : ''" :policy="policy[0] ? policy[0] : ''"/>
+  <router-view v-slot="{Component}" v-if="mainPage[0]" :firebaseTexts="mainPage[0] ? mainPage[0] : ''" :policy="policy[0] ? policy[0] : ''">
+    <transition name="scale" mode="out-in">
+      <component :is="Component" :key="$route.path"></component>
+    </transition>
+  </router-view>
   <ShortPolicy v-if="!acceptCookie && policy[0]" :policyText="policy[0].short_policy ? policy[0].short_policy : ''"/>
   <FooterBase v-if="mainPage[0]" :firebaseTexts="mainPage[0]" :policy="policy[0] ? policy[0] : ''"/>
 </template>
@@ -60,6 +64,16 @@ export default {
 </script>
 
 <style lang="scss">
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.3s ease;
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
 html {
   font-size: 14px;
   scroll-behavior: smooth;
@@ -84,6 +98,9 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+.header, .footer {
+  z-index: 1;
 }
 #app {
   display: flex;
